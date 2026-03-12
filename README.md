@@ -38,6 +38,16 @@ await agent.sleep({ summary: 'Completed refactor. Deferred auth ticket to tomorr
 
 ---
 
+## QA / Smoke test (Alienware RTX 5090)
+
+- Time: Thursday, March 12th, 2026 — 4:02 PM (America/New_York)
+- Smoke test: Cogito.wake() against local Ollama generator @ 192.168.68.73:11435 (no Engram memory supplied)
+- Result: wake returned sessionId=86c44e12-69b8-4675-98a0-98f4b63f7745 and default summary: "Agent test-agent — session started. 0 recent memories loaded."
+
+Cogito compiled and produced a wake briefing (fallback summary) in smoke run. Next: wire Cogito to Engram API for real briefings and add CI tests.
+
+---
+
 ## Architecture
 
 ```
@@ -55,41 +65,6 @@ await agent.sleep({ summary: 'Completed refactor. Deferred auth ticket to tomorr
 │              Engram                      │
 │  store() · recall() · consolidate()     │
 └─────────────────────────────────────────┘
-```
-
----
-
-## API (v0.2 — coming soon)
-
-### `new Cogito(config)`
-
-```typescript
-const agent = new Cogito({
-  agentId: 'my-agent',      // stable identity key
-  memory: engramInstance,   // Engram instance
-  persona?: string,         // optional system prompt / personality
-  ollamaUrl?: string,       // local LLM for briefing synthesis
-});
-```
-
-### `wake(): Promise<WakeBriefing>`
-
-Initialize the agent, load recent context from Engram, and return a briefing summary.
-
-### `sleep(options?): Promise<void>`
-
-Summarize the session, store a session-digest memory, and close connections cleanly.
-
-### `reflect(query): Promise<string>`
-
-Synthesize insights across retrieved memories before a task.
-
-### Belief Revision
-
-```typescript
-await agent.reinforce(memoryId);   // confirm a belief
-await agent.contradict(memoryId);  // challenge a belief
-await agent.invalidate(memoryId);  // supersede a belief
 ```
 
 ---
